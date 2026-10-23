@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090912">
+<title>PLAY MUSIC • Brasil</title>
+<style>
+:root{color-scheme:dark;--bg:#090912;--panel:#151522;--line:#29283b;--text:#f7f5ff;--muted:#aaa8c0;--cyan:#37d9e8;--pink:#d946ef}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#211238 0,#090912 55%);font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text);min-height:100vh}
+main{max-width:900px;margin:auto;padding:22px 16px 48px}.back{color:var(--cyan);text-decoration:none;font-weight:700}
+header{padding:28px 0 22px} .eyebrow{letter-spacing:.22em;color:var(--cyan);font-size:.75rem;font-weight:800}h1{font-size:clamp(2rem,8vw,3.5rem);line-height:1.05;margin:10px 0}h1 span{background:linear-gradient(90deg,var(--cyan),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
+p{color:var(--muted);line-height:1.6}.search{display:flex;gap:9px;margin:20px 0}.search input{min-width:0;flex:1;background:#171724;border:1px solid var(--line);border-radius:14px;padding:15px;color:white;font:inherit}.search button,.pill,.service{border:1px solid var(--line);border-radius:13px;background:#191927;color:var(--text);padding:12px 15px;font:inherit;cursor:pointer}.search button{background:linear-gradient(110deg,#127f91,#8c2aa5);font-weight:800;border:0}.genres{display:flex;flex-wrap:wrap;gap:9px;margin:18px 0 26px}.pill[aria-pressed=true]{border-color:var(--cyan);color:var(--cyan);background:#123039}.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px}h2{font-size:1.2rem}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.card{background:linear-gradient(150deg,#1b1a2c,#11111b);border:1px solid var(--line);border-radius:18px;padding:17px}.emoji{font-size:2rem}.card h3{margin:10px 0 5px}.card p{font-size:.92rem;min-height:44px;margin:0 0 15px}.links{display:flex;gap:8px;flex-wrap:wrap}.service{text-decoration:none;font-size:.88rem;display:inline-block}.service:hover{border-color:var(--cyan)}.note{border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:24px;font-size:.88rem}.note strong{color:var(--cyan)}footer{text-align:center;color:var(--muted);font-size:.8rem;margin-top:30px}
+</style>
+</head>
+<body><main>
+<a class="back" href="./index.html">← Voltar ao PLAY MUSIC</a>
+<header><div class="eyebrow">PLAY MUSIC • BRASIL</div><h1>Seu som.<br><span>Seu Brasil.</span></h1><p>Encontre seus artistas e músicas brasileiras favoritas. Escolha um estilo ou pesquise por música, artista ou banda.</p></header>
+<form class="search" id="searchForm"><input id="q" type="search" placeholder="Ex.: Jorge & Mateus, Anitta, pagode..." aria-label="Pesquisar artista ou música"><button type="submit">Buscar</button></form>
+<div class="genres" id="genres" aria-label="Estilos musicais"></div>
+<div class="section-title"><h2 id="heading">Explore os estilos</h2><span id="count" style="color:var(--muted);font-size:.85rem"></span></div>
+<div class="grid" id="results"></div>
+<div class="note"><strong>Como funciona:</strong> os botões levam à pesquisa do serviço escolhido. A reprodução ocorre na plataforma oficial, conforme as regras e a disponibilidade dela. Esta página não hospeda nem copia músicas comerciais.</div>
+<footer>PLAY MUSIC • Música para todos os momentos</footer>
+</main>
+<script>
+const styles=[
+{name:"Sertanejo",emoji:"🤠",desc:"Sertanejo universitário, sofrência e modão",terms:"sertanejo brasileiro"},
+{name:"Pagode",emoji:"🥁",desc:"Pagode romântico e rodas de samba",terms:"pagode brasileiro"},
+{name:"Funk",emoji:"🔥",desc:"Funk brasileiro e hits do momento",terms:"funk brasileiro"},
+{name:"MPB",emoji:"🎸",desc:"Clássicos e novas vozes da MPB",terms:"MPB brasileira"},
+{name:"Samba",emoji:"🪘",desc:"Samba de raiz e grandes intérpretes",terms:"samba brasileiro"},
+{name:"Forró",emoji:"🪗",desc:"Forró, piseiro e clima de festa",terms:"forró brasileiro"},
+{name:"Gospel",emoji:"🙏",desc:"Louvor, adoração e música cristã",terms:"música gospel brasileira"},
+{name:"Piseiro",emoji:"🎤",desc:"Piseiro e vaquejada",terms:"piseiro brasileiro"}
+];
+let selected="Todos";
+const genres=document.getElementById("genres"),results=document.getElementById("results"),q=document.getElementById("q");
+function button(label,href){return `<a class="service" href="${href}" target="_blank" rel="noopener noreferrer">${label} ↗</a>`}
+function searchUrl(base,term){return base+encodeURIComponent(term)}
+function render(){
+ genres.innerHTML=["Todos",...styles.map(s=>s.name)].map(n=>`<button class="pill" aria-pressed="${selected===n}" data-style="${n}">${n}</button>`).join("");
+ const list=selected==="Todos"?styles:styles.filter(s=>s.name===selected);
+ document.getElementById("heading").textContent=q.value.trim()?"Resultados para: "+q.value.trim():(selected==="Todos"?"Explore os estilos":"Estilo: "+selected);
+ document.getElementById("count").textContent=list.length+" estilos";
+ results.innerHTML=list.map(s=>{
+ const term=q.value.trim()?q.value.trim()+" "+(selected==="Todos"?"":s.name):s.terms;
+ return `<article class="card"><div class="emoji">${s.emoji}</div><h3>${s.name}</h3><p>${s.desc}</p><div class="links">${button("YouTube","https://www.youtube.com/results?search_query="+encodeURIComponent(term))}${button("Spotify","https://open.spotify.com/search/"+encodeURIComponent(term))}${button("YouTube Music","https://music.youtube.com/search?q="+encodeURIComponent(term))}</div></article>`;
+ }).join("");
+ genres.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{selected=b.dataset.style;render()}));
+}
+document.getElementById("searchForm").addEventListener("submit",e=>{e.preventDefault();render()});
+render();
+</script></body></html>
