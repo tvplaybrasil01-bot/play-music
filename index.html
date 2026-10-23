@@ -4,16 +4,16 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#090912"><title>PLAY MUSIC • Sua música, seu mundo</title>
 <style>
-:root{color-scheme:dark;--bg:#090912;--panel:#171724;--line:#2b2a40;--text:#f7f5ff;--muted:#aaa8c0;--cyan:#37d9e8;--pink:#d946ef}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top,#25113a 0,#090912 58%);font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text)}
-main{max-width:1000px;margin:auto;padding:20px 16px 46px}header{padding:22px 0 18px}.eyebrow{font-size:.75rem;letter-spacing:.2em;color:var(--cyan);font-weight:800}
-h1{font-size:clamp(2.3rem,8vw,4rem);line-height:1.02;margin:12px 0}h1 span{background:linear-gradient(90deg,var(--cyan),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
+:root{color-scheme:dark;--bg:#090912;--panel:#171724;--line:#2b2a40;--text:#f7f5ff;--muted:#aaa8c0}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top,#25113a 0,#090912 58%),var(--bg);font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text)}
+main{max-width:1000px;margin:auto;padding:20px 16px 46px}header{padding:22px 0 18px}.eyebrow{font-size:.75rem;letter-spacing:.2em;color:#37d9e8;font-weight:800}
+h1{font-size:clamp(2.3rem,8vw,4rem);line-height:1.02;margin:12px 0}h1 span{background:linear-gradient(90deg,#37d9e8,#d946ef);-webkit-background-clip:text;background-clip:text;color:transparent}
 p{color:var(--muted);line-height:1.6}.nav{display:flex;flex-wrap:wrap;gap:9px;margin:20px 0}.nav a,.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;border:1px solid var(--line);border-radius:13px;padding:12px 15px;background:#191927;color:var(--text);font:inherit;font-weight:750}
 .nav a.primary,.btn.primary{background:linear-gradient(110deg,#127f91,#8c2aa5);border:0}
 .hero{border:1px solid var(--line);border-radius:24px;padding:clamp(18px,5vw,32px);background:linear-gradient(140deg,#1b1a2cdd,#11111bdd);position:relative;overflow:hidden}
 .hero:after{content:"♫";position:absolute;right:14px;bottom:-60px;font-size:clamp(9rem,25vw,17rem);color:#ffffff08;pointer-events:none}
 .search{display:flex;gap:9px;margin-top:18px;max-width:680px}.search input{min-width:0;flex:1;background:#11111c;border:1px solid var(--line);border-radius:13px;padding:14px;color:var(--text);font:inherit}.search button{border:0;border-radius:13px;padding:13px 16px;background:linear-gradient(110deg,#127f91,#8c2aa5);color:white;font:inherit;font-weight:800}
-h2{font-size:1.25rem;margin:0 0 6px}.sub{margin-top:0;font-size:.9rem}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}.card{background:linear-gradient(150deg,#1b1a2c,#11111b);border:1px solid var(--line);border-radius:19px;padding:18px;display:flex;flex-direction:column;align-items:flex-start;min-height:205px}.icon{font-size:2.2rem;margin-bottom:12px}.card p{font-size:.92rem;flex:1;margin:7px 0 17px}.card a{display:inline-block;text-decoration:none;color:var(--cyan);font-weight:800}.section{margin-top:28px}.footer{margin-top:34px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:.82rem}
+h2{font-size:1.25rem;margin:0 0 6px}.sub{margin-top:0;font-size:.9rem}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:16px}.card{background:linear-gradient(150deg,#1b1a2c,#11111b);border:1px solid var(--line);border-radius:19px;padding:18px;display:flex;flex-direction:column;align-items:flex-start;min-height:205px}.icon{font-size:2.2rem;margin-bottom:12px}.card p{font-size:.92rem;flex:1;margin:7px 0 17px}.card a{display:inline-block;text-decoration:none;color:#37d9e8;font-weight:800}.section{margin-top:28px}.footer{margin-top:34px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:.82rem}
 @media(max-width:480px){.search{flex-direction:column}.search button{width:100%}.nav a{flex:1}.card{min-height:180px}}
 </style></head>
 <body><main>
@@ -25,6 +25,7 @@ h2{font-size:1.25rem;margin:0 0 6px}.sub{margin-top:0;font-size:.9rem}.grid{disp
 <a class="primary" href="./biblioteca.html">🌎 Biblioteca Mundial</a>
 <a href="./brasileiras.html">🇧🇷 Músicas Brasileiras</a>
 <a href="./player.html">🎧 Meu Player</a>
+<a href="https://link.deezer.com/s/34KLQ45cbskZdmDqvr19r" target="_blank" rel="noopener noreferrer">💜 Abrir Deezer Premium ↗</a>
 </nav>
 </header>
 <section class="hero">
@@ -39,6 +40,7 @@ h2{font-size:1.25rem;margin:0 0 6px}.sub{margin-top:0;font-size:.9rem}.grid{disp
 <article class="card"><div class="icon">🌎</div><h2>Biblioteca Mundial</h2><p>Explore músicas internacionais e pesquise vídeos musicais com o player oficial do YouTube.</p><a href="./biblioteca.html">Abrir biblioteca →</a></article>
 <article class="card"><div class="icon">🇧🇷</div><h2>Músicas Brasileiras</h2><p>Sertanejo, pagode, funk, MPB, samba, forró, gospel, piseiro e outros estilos.</p><a href="./brasileiras.html">Explorar Brasil →</a></article>
 <article class="card"><div class="icon">🎧</div><h2>Meu Player</h2><p>Reproduza arquivos de áudio selecionados no seu celular ou computador.</p><a href="./player.html">Abrir player →</a></article>
+<article class="card"><div class="icon">💜</div><h2>Deezer Premium</h2><p>Abra sua playlist compartilhada no Deezer e ouça usando sua conta Premium no aplicativo ou site oficial.</p><a href="https://link.deezer.com/s/34KLQ45cbskZdmDqvr19r" target="_blank" rel="noopener noreferrer">Abrir minha playlist →</a></article>
 </div>
 </section>
 <section class="section">
