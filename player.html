@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090912">
+<title>PLAY MUSIC PLAYER</title>
+<style>
+:root{color-scheme:dark;--bg:#090912;--panel:#171724;--line:#2b2a40;--text:#f7f5ff;--muted:#aaa8c0;--cyan:#37d9e8;--pink:#d946ef}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top,#25113a 0,#090912 58%);font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text)}
+main{max-width:760px;margin:auto;padding:22px 16px 44px}
+a{color:var(--cyan);text-decoration:none;font-weight:700}
+header{padding:24px 0 18px}.eyebrow{font-size:.75rem;letter-spacing:.2em;color:var(--cyan);font-weight:800}
+h1{font-size:clamp(2rem,8vw,3.3rem);line-height:1.04;margin:10px 0}
+h1 span{background:linear-gradient(90deg,var(--cyan),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
+p{color:var(--muted);line-height:1.55}
+.panel{background:linear-gradient(150deg,#1b1a2c,#11111b);border:1px solid var(--line);border-radius:22px;padding:18px;margin:16px 0}
+.file-label,.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);border-radius:14px;padding:13px 16px;background:#1a1a29;color:var(--text);font:inherit;font-weight:700;cursor:pointer}
+.file-label{background:linear-gradient(110deg,#127f91,#8c2aa5);border:0}
+input[type=file]{display:none}
+.player{display:grid;grid-template-columns:120px 1fr;gap:18px;align-items:center}
+.cover{width:120px;aspect-ratio:1;border-radius:18px;display:grid;place-items:center;font-size:3.2rem;background:linear-gradient(145deg,#153a4a,#52215e);border:1px solid #40304f}
+.track-title{font-weight:800;font-size:1.15rem;overflow-wrap:anywhere}.artist{color:var(--muted);font-size:.92rem;margin-top:5px}
+.progress{width:100%;accent-color:var(--cyan);margin:14px 0 0}
+.times{display:flex;justify-content:space-between;color:var(--muted);font-size:.8rem}
+.controls{display:flex;align-items:center;justify-content:center;gap:12px;margin:14px 0 4px}
+.controls .btn{min-width:54px}.controls .play{width:68px;height:58px;border:0;background:linear-gradient(110deg,#127f91,#8c2aa5);font-size:1.25rem}
+.volume{display:flex;align-items:center;gap:10px;margin-top:14px;color:var(--muted)}.volume input{flex:1;accent-color:var(--cyan)}
+.list-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#trackList{list-style:none;padding:0;margin:12px 0 0}
+#trackList li{display:flex;align-items:center;gap:10px;padding:12px;border-top:1px solid var(--line);cursor:pointer;overflow-wrap:anywhere}
+#trackList li.active{color:var(--cyan)}.num{color:var(--muted);min-width:24px}
+.small{font-size:.82rem;color:var(--muted)}
+.notice{font-size:.85rem;border-left:3px solid var(--cyan);padding-left:12px}
+@media(max-width:430px){.player{grid-template-columns:88px 1fr;gap:13px}.cover{width:88px;font-size:2.5rem}.panel{padding:14px}.controls{gap:8px}}
+</style>
+</head>
+<body>
+<main>
+<a href="./index.html">← Voltar ao PLAY MUSIC</a>
+<header>
+<div class="eyebrow">PLAY MUSIC • PLAYER</div>
+<h1>Seu som.<br><span>Do seu jeito.</span></h1>
+<p>Um player simples para ouvir arquivos de áudio que você tem direito de usar. Selecione músicas do seu celular ou computador.</p>
+<label class="file-label" for="files">＋ Adicionar músicas</label>
+<input id="files" type="file" accept="audio/*,.mp3,.m4a,.aac,.ogg,.wav,.flac" multiple>
+</header>
+<section class="panel player" aria-label="Reprodutor">
+<div class="cover" id="cover">♫</div>
+<div>
+<div class="track-title" id="trackTitle">Nenhuma música selecionada</div>
+<div class="artist" id="trackArtist">Adicione arquivos para começar</div>
+<div class="times"><span id="currentTime">0:00</span><span id="duration">0:00</span></div>
+<input class="progress" id="progress" type="range" min="0" max="1000" value="0" aria-label="Progresso da música">
+</div>
+</section>
+<div class="controls">
+<button class="btn" id="prev" aria-label="Faixa anterior">⏮</button>
+<button class="btn play" id="toggle" aria-label="Reproduzir ou pausar">▶</button>
+<button class="btn" id="next" aria-label="Próxima faixa">⏭</button>
+</div>
+<div class="volume"><span>🔉 Volume</span><input id="volume" type="range" min="0" max="1" step="0.01" value="0.85" aria-label="Volume"><span id="volValue">85%</span></div>
+<audio id="audio" preload="metadata"></audio>
+<section class="panel">
+<div class="list-head"><h2 style="margin:0">Minha biblioteca</h2><span id="count" class="small">0 faixas</span></div>
+<ul id="trackList"><li class="small">Suas músicas selecionadas aparecerão aqui.</li></ul>
+</section>
+<p class="notice">Privacidade: nesta versão, os arquivos são selecionados no seu aparelho e reproduzidos no navegador. Eles não são enviados para um servidor. Ao recarregar ou fechar a página, selecione os arquivos novamente.</p>
+<p class="small">PLAY MUSIC • Música para todos os momentos</p>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const audio=$('audio'), fileInput=$('files'), list=$('trackList');
+let tracks=[], current=-1, urls=[];
+function fmt(seconds){if(!Number.isFinite(seconds)||seconds<0)return '0:00';const m=Math.floor(seconds/60),s=Math.floor(seconds%60);return `${m}:${String(s).padStart(2,'0')}`}
+function renderList(){
+  $('count').textContent=`${tracks.length} ${tracks.length===1?'faixa':'faixas'}`;
+  if(!tracks.length){list.innerHTML='<li class="small">Suas músicas selecionadas aparecerão aqui.</li>';return}
+  list.innerHTML='';
+  tracks.forEach((t,i)=>{const li=document.createElement('li');li.className=i===current?'active':'';const n=document.createElement('span');n.className='num';n.textContent=String(i+1).padStart(2,'0');const name=document.createElement('span');name.textContent=t.name;li.append(n,name);li.addEventListener('click',()=>loadTrack(i,true));list.append(li)});
+}
+function loadTrack(i,play=false){
+ if(i<0||i>=tracks.length)return;current=i;audio.src=urls[i];$('trackTitle').textContent=tracks[i].name.replace(/\.[^.]+$/,'');$('trackArtist').textContent='Arquivo local • PLAY MUSIC';$('cover').textContent='♫';$('toggle').textContent='▶';$('progress').value=0;$('currentTime').textContent='0:00';$('duration').textContent='0:00';renderList();if(play)audio.play().then(()=>{$('toggle').textContent='⏸'}).catch(()=>{});
+}
+fileInput.addEventListener('change',()=>{
+ const files=Array.from(fileInput.files||[]).filter(f=>f.type.startsWith('audio/')||/\.(mp3|m4a|aac|ogg|wav|flac|opus)$/i.test(f.name));
+ if(!files.length)return;
+ tracks.forEach((t,i)=>{if(urls[i])URL.revokeObjectURL(urls[i])});
+ tracks=files;urls=tracks.map(f=>URL.createObjectURL(f));loadTrack(0,false);renderList();fileInput.value='';
+});
+$('toggle').addEventListener('click',()=>{if(current<0){fileInput.click();return}if(audio.paused)audio.play().then(()=>$('toggle').textContent='⏸').catch(()=>{});else{audio.pause();$('toggle').textContent='▶'}});
+$('prev').addEventListener('click',()=>{if(tracks.length)loadTrack((current-1+tracks.length)%tracks.length,true)});
+$('next').addEventListener('click',()=>{if(tracks.length)loadTrack((current+1)%tracks.length,true)});
+audio.addEventListener('play',()=>$('toggle').textContent='⏸');audio.addEventListener('pause',()=>$('toggle').textContent='▶');
+audio.addEventListener('loadedmetadata',()=>$('duration').textContent=fmt(audio.duration));
+audio.addEventListener('timeupdate',()=>{if(Number.isFinite(audio.duration)&&audio.duration>0){$('progress').value=Math.round(audio.currentTime/audio.duration*1000);$('currentTime').textContent=fmt(audio.currentTime)}});
+audio.addEventListener('ended',()=>{if(tracks.length)loadTrack((current+1)%tracks.length,true)});
+$('progress').addEventListener('input',()=>{if(Number.isFinite(audio.duration)&&audio.duration>0)audio.currentTime=(Number($('progress').value)/1000)*audio.duration});
+$('volume').addEventListener('input',()=>{audio.volume=Number($('volume').value);$('volValue').textContent=Math.round(audio.volume*100)+'%'});audio.volume=.85;
+</script>
+</body>
+</html>
